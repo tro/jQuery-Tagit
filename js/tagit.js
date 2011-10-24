@@ -135,14 +135,14 @@
                 if (e.which == self._keys.backspace)
                     return self._backspace(lastLi);
 
-                if (self._isInitKey(e.which)) {
+                if ($(this).val().length >= Math.max(self.options.minLength, 1) && self._isInitKey(e.which)) {
                     e.preventDefault();
-                    if (self.options.allowNewTags && $(this).val().length >= self.options.minLength) {
+                    if (self.options.allowNewTags) {
                         self._addTag($(this).val());
-                   	} 
-                   	else if (!self.options.allowNewTags){
-                   	    self.input.val("");
-                   	}
+                    }
+                    else {
+                        self.input.val("");
+                    }
                 }
 
                 if (lastLi.hasClass('selected'))
@@ -265,10 +265,13 @@
 
         _isInitKey : function(keyCode) {
             var keyName = "";
-            for (var key in this._keys)
-        		if ($.inArray(keyCode, this._keys[key]) != -1)
-        			keyName = key;
-        			
+            for (var key in this._keys) {
+				if ($.inArray(keyCode, this._keys[key]) != -1) {
+					keyName = key;
+					break;
+				}
+			}
+
             if ($.inArray(keyName, this.options.triggerKeys) != -1)
                 return true;
             return false;
